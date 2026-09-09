@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+
+  api-gateway:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - dashmarket-net
+
+  catalog-service:
+    image: dashmarket-catalog:1.0
+    deploy:
+      replicas: 2
+    networks:
+      - dashmarket-net
+
+  order-service:
+    image: dashmarket-order:1.0
+    deploy:
+      replicas: 2
+    networks:
+      - dashmarket-net
+
+  delivery-service:
+    image: dashmarket-delivery:1.0
+    deploy:
+      replicas: 1
+    networks:
+      - dashmarket-net
+
+  notification-service:
+    image: dashmarket-notify:1.0
+    deploy:
+      replicas: 1
+    networks:
+      - dashmarket-net
+
+networks:
+  dashmarket-net:
+    driver: overlay
